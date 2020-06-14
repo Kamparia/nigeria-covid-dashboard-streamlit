@@ -27,7 +27,9 @@ st.sidebar.title('App Settings') ## sidebar title
 states_name = ["All States"]
 for index, row in states_csv.iterrows():
     state = row['STATE']
-    states_name.append(state)
+    cases = row['CASES']
+    if cases > 0:
+        states_name.append(state)
 
 ## sidebar - select state
 sidebar_state_option = st.sidebar.selectbox(

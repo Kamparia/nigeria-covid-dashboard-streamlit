@@ -39,9 +39,29 @@ def summary():
     st.text("")
     st.text("")
 
+    data = go.Pie(
+        labels = [
+            'ACTIVE CASES ('+str(round(((active_no/cases_no)*100),2))+'%)', 
+            'DEATHS ('+str(round(((deaths_no/cases_no)*100),2))+'%)', 
+            'DISCHARGED ('+str(round(((recovered_no/cases_no)*100),2))+'%)'
+        ], 
+        values = [active_no, deaths_no, recovered_no],
+        hoverinfo='label+percent', 
+        textinfo='value', 
+        textfont=dict(size=20),
+        marker=dict(colors = ['rgb(102, 111, 249)', 'rgb(239, 85, 58)', 'rgb(89, 205, 150)'], 
+            line=dict(color='#FFF', width=1)
+        )
+    )
+
+    fig = go.Figure(data = [data])
+    fig.update_layout(legend_orientation='h', margin=dict(l=5, r=0, t=5, b=0))
+    st.plotly_chart(fig)
+
 def table():
     ## sub header
-    st.subheader("COVID-19 Cases by States:")
+    st.subheader("Cases by States:")
+    st.write("COVID-19 records according to states.")
 
     # display table data
     st.table(states_csv[["STATE", "CASES", "DEATHS", "RECOVERED", "ACTIVE"]])
@@ -75,31 +95,7 @@ def charts(sidebar_trend_option):
     else:
         cases_overtime()
         new_records_overtime()
-        cases_status_chart()
 
-def cases_status_chart():
-    st.subheader("Case By Status:")
-    st.write("Status of total confirmed cases till date.")
-
-    df = states_csv
-    active_no = df['ACTIVE'].sum()
-    deaths_no = df['DEATHS'].sum()
-    recovered_no = df['RECOVERED'].sum()
-
-    data = go.Pie(
-        labels = ['ACTIVE', 'DEATHS', 'DISCHARGED'], 
-        values = [active_no, deaths_no, recovered_no],
-        hoverinfo='label+percent', 
-        textinfo='value', 
-        textfont=dict(size=20),
-        marker=dict(colors = ['#636efa', '#ef553b', '#00cc96'], 
-            line=dict(color='#FFF', width=1)
-        )
-    )
-
-    fig = go.Figure(data = [data])
-    fig.update_layout(legend_orientation='h', margin=dict(l=5, r=0, t=5, b=0))
-    st.plotly_chart(fig)
 
 ## cases over time chart
 def cases_overtime():
@@ -113,6 +109,7 @@ def cases_overtime():
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
     st.plotly_chart(fig)
 
+
 ## cases over time chart
 def new_records_overtime():
     st.subheader("Daily Changes:")
@@ -125,6 +122,7 @@ def new_records_overtime():
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
     st.plotly_chart(fig)
 
+
 ## total cases overtime charts
 def total_cases_overtime():
     st.subheader("Total Confirmed Cases:")
@@ -135,6 +133,7 @@ def total_cases_overtime():
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
     st.plotly_chart(fig)
 
+
 ## total deaths overtime charts
 def total_deaths_overtime():
     st.subheader("Total Deaths:")
@@ -143,7 +142,9 @@ def total_deaths_overtime():
     data = go.Line(x = pd.to_datetime(df['DATE']), y = df['DEATHS'], name = 'TOTAL DEATHS')
     fig = go.Figure(data=[data])
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
+    fig.update_traces(marker_color='rgb(239, 85, 58)')
     st.plotly_chart(fig)
+
 
 ## total discharged overtime charts
 def total_discharged_overtime():
@@ -153,7 +154,9 @@ def total_discharged_overtime():
     data = go.Line(x = pd.to_datetime(df['DATE']), y = df['RECOVERED'], name = 'TOTAL DISCHARGED')
     fig = go.Figure(data=[data])
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
+    fig.update_traces(marker_color='rgb(89, 205, 150)')
     st.plotly_chart(fig)
+
 
 ## new cases overtime charts
 def new_cases_overtime():
@@ -165,6 +168,7 @@ def new_cases_overtime():
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
     st.plotly_chart(fig)
 
+
 ## new discharged over time
 def new_discharged_overtime():
     st.subheader("Daily Discharged:")
@@ -173,7 +177,9 @@ def new_discharged_overtime():
     data = go.Bar(x = pd.to_datetime(df['DATE']), y = df['DAILY RECOVERED'], name = 'DAILY DISCHARGED')
     fig = go.Figure(data=[data])
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
+    fig.update_traces(marker_color='rgb(89, 205, 150)')
     st.plotly_chart(fig)
+
 
 ## new deaths over time
 def new_deaths_overtime():
@@ -183,4 +189,5 @@ def new_deaths_overtime():
     data = go.Bar(x = pd.to_datetime(df['DATE']), y = df['DAILY DEATHS'], name = 'DAILY DEATHS')
     fig = go.Figure(data=[data])
     fig.update_layout(legend_orientation='h', margin=dict(l=0, r=0, t=0, b=0))
+    fig.update_traces(marker_color='rgb(239, 85, 58)')
     st.plotly_chart(fig)
