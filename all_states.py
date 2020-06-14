@@ -9,6 +9,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 from load_data import load_data
+from maps import (choropleth_map, point_size_map)
 
 ## load data
 data = load_data()
@@ -19,15 +20,15 @@ states_daily_deaths_csv = data[3]
 states_daily_recovered_csv = data[4]
 states_geojson = data[5]
 
-def summary():
+def summary(sidebar_visual_option):
     st.subheader("Data Summary:")
     st.write("Summary of coronavirus infection cases in Nigeria.")
 
     df = states_csv
-    cases_no = df['CASES'].sum()
+    cases_no = df['CONFIRMED'].sum()
     active_no = df['ACTIVE'].sum()
     deaths_no = df['DEATHS'].sum()
-    recovered_no = df['RECOVERED'].sum()
+    recovered_no = df['DISCHARGED'].sum()
 
     st.markdown(
         """
@@ -39,24 +40,25 @@ def summary():
     st.text("")
     st.text("")
 
-    data = go.Pie(
-        labels = [
-            'ACTIVE CASES ('+str(round(((active_no/cases_no)*100),2))+'%)', 
-            'DEATHS ('+str(round(((deaths_no/cases_no)*100),2))+'%)', 
-            'DISCHARGED ('+str(round(((recovered_no/cases_no)*100),2))+'%)'
-        ], 
-        values = [active_no, deaths_no, recovered_no],
-        hoverinfo='label+percent', 
-        textinfo='value', 
-        textfont=dict(size=20),
-        marker=dict(colors = ['rgb(102, 111, 249)', 'rgb(239, 85, 58)', 'rgb(89, 205, 150)'], 
-            line=dict(color='#FFF', width=1)
+    if sidebar_visual_option != "Tables" and sidebar_visual_option != "Maps":
+        data = go.Pie(
+            labels = [
+                'ACTIVE CASES ('+str(round(((active_no/cases_no)*100),2))+'%)', 
+                'DEATHS ('+str(round(((deaths_no/cases_no)*100),2))+'%)', 
+                'DISCHARGED ('+str(round(((recovered_no/cases_no)*100),2))+'%)'
+            ], 
+            values = [active_no, deaths_no, recovered_no],
+            hoverinfo='label+percent', 
+            textinfo='value', 
+            textfont=dict(size=20),
+            marker=dict(colors = ['rgb(102, 111, 249)', 'rgb(239, 85, 58)', 'rgb(89, 205, 150)'], 
+                line=dict(color='#FFF', width=1)
+            )
         )
-    )
 
-    fig = go.Figure(data = [data])
-    fig.update_layout(legend_orientation='h', margin=dict(l=5, r=0, t=5, b=0))
-    st.plotly_chart(fig)
+        fig = go.Figure(data = [data])
+        fig.update_layout(legend_orientation='h', margin=dict(l=5, r=0, t=5, b=0))
+        st.plotly_chart(fig)
 
 def table():
     ## sub header
@@ -64,26 +66,15 @@ def table():
     st.write("COVID-19 records according to states.")
 
     # display table data
-    st.table(states_csv[["STATE", "CASES", "DEATHS", "RECOVERED", "ACTIVE"]])
+    st.table(states_csv[["STATE", "CONFIRMED", "DEATHS", "DISCHARGED", "ACTIVE"]])
 
 def map(sidebar_basemap_option):
-    basemap = sidebar_basemap_option.lower()
+    point_size_map("confirmed", sidebar_basemap_option)
+    choropleth_map("confirmed", sidebar_basemap_option)
 
-    ## sub header
-    st.subheader("COVID-19 Cases by States:")
-    st.write("Total number of confirmed cases over time.")
-
-    ## rename lat, long column names
-    states_csv.rename(columns={'LAT':'lat', 'LONG':'lon'}, inplace=True)
-    
-    ## display map
-    px.set_mapbox_access_token("pk.eyJ1Ijoia2FtcGFyaWEiLCJhIjoiY2s3OHMyaWlhMGk5azNsbnl3MnJweWdjYyJ9.4K1LcrByr-9dxInw2Iy7lw")
-    fig = px.scatter_mapbox(states_csv, lat="lat", lon="lon", size="CASES", zoom=5)
-    fig.update_layout(margin=dict(l=5, r=0, t=5, b=0), mapbox={'style':basemap})
-    st.plotly_chart(fig)
 
 def charts(sidebar_trend_option):
-    if sidebar_trend_option == 'Cases':
+    if sidebar_trend_option == 'Confirmed':
         total_cases_overtime()
         new_cases_overtime()
     elif sidebar_trend_option == 'Deaths':
@@ -95,6 +86,7 @@ def charts(sidebar_trend_option):
     else:
         cases_overtime()
         new_records_overtime()
+        choropleth_map("confirmed", "Default")
 
 
 ## cases over time chart

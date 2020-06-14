@@ -11,6 +11,7 @@ def load_data():
 
     ## 0 - ncdc-covid19-states.csv
     states_csv = pd.read_csv("https://raw.githubusercontent.com/Kamparia/nigeria-covid19-data/master/data/csv/ncdc-covid19-states.csv")
+    states_csv.rename(columns={'CASES':'CONFIRMED', 'RECOVERED':'DISCHARGED', 'LAT':'lat', 'LONG':'lon'}, inplace=True)
     data.append(states_csv)
 
     ## 1 - ncdc-covid19-dailyupdates.csv
@@ -31,6 +32,7 @@ def load_data():
 
     ## 5 - ncdc-covid19-states.geojson
     states_geojson = gpd.read_file("https://raw.githubusercontent.com/Kamparia/nigeria-covid19-data/master/data/geojson/ncdc-covid19-states.geojson")
+    states_geojson.rename(columns={'CASES':'CONFIRMED', 'RECOVERED':'DISCHARGED', 'LAT':'lat', 'LONG':'lon'}, inplace=True)
     data.append(states_geojson)
 
     # return

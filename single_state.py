@@ -18,6 +18,7 @@ states_daily_deaths_csv = data[3]
 states_daily_recovered_csv = data[4]
 states_geojson = data[5]
 
+
 def fetch_state_charts(state):
     summary(state)
 
@@ -31,11 +32,10 @@ def summary(state):
     st.write("Summary of coronavirus infection cases in {0} State.".format(state))
 
     df = states_csv[(states_csv['STATE'] == state)]
-    cases_no = df['CASES'].sum()
+    cases_no = df['CONFIRMED'].sum()
     active_no = df['ACTIVE'].sum()
     deaths_no = df['DEATHS'].sum()
-    recovered_no = df['RECOVERED'].sum()
-
+    recovered_no = df['DISCHARGED'].sum()
 
     st.markdown(
         """

@@ -27,7 +27,7 @@ st.sidebar.title('App Settings') ## sidebar title
 states_name = ["All States"]
 for index, row in states_csv.iterrows():
     state = row['STATE']
-    cases = row['CASES']
+    cases = row['CONFIRMED']
     if cases > 0:
         states_name.append(state)
 
@@ -43,12 +43,12 @@ if sidebar_state_option == 'All States':
 
 if sidebar_state_option == 'All States' and sidebar_visual_option == 'Charts':
     sidebar_trend_option = st.sidebar.selectbox(
-        'Data Category:', ('All', 'Cases', 'Deaths', 'Discharged')
+        'Cases Category:', ('All', 'Confirmed', 'Deaths', 'Discharged')
     )
 
 if sidebar_state_option == 'All States' and sidebar_visual_option == 'Maps':
     sidebar_basemap_option = st.sidebar.selectbox(
-        'Basemap Style:', ('Basic', 'Light', 'Dark', 'Streets')
+        'Basemap Style:', ('Default', 'Dark', 'Light', 'Streets')
     )
 
 #####################################################################
@@ -60,7 +60,7 @@ st.write('Nigeria Novel Coronavirus (COVID-19) Data Explorer Application.')
 ## main
 if sidebar_state_option == 'All States':
     ## all states
-    summary()
+    summary(sidebar_visual_option)
     
     if sidebar_visual_option == 'Tables':
         table()
@@ -72,3 +72,20 @@ else:
     ## single state
     state_name = sidebar_state_option
     fetch_state_charts(state_name)
+
+
+#####################################################################
+
+## footer
+st.subheader("About this App:")
+st.markdown(
+    """
+    All data and information are provided strictly for public consumption and general information. 
+
+    **Data Scientist / Developer:** [Olaoye Anthony Somide](http://somideolaoye.com).
+
+    **Downloadable database:** [Nigeria COVID-19 Public Dataset - GitHub Repo](https://github.com/Kamparia/nigeria-covid19-data). 
+
+    **Data Sources:** [Nigeria Centre for Disease Control (NCDC)](https://covid19.ncdc.gov.ng/).
+    """
+)
