@@ -69,8 +69,11 @@ def table():
     st.table(states_csv[["STATE", "CONFIRMED", "DEATHS", "DISCHARGED", "ACTIVE"]])
 
 def map(sidebar_basemap_option):
-    point_size_map("confirmed", sidebar_basemap_option)
     choropleth_map("confirmed", sidebar_basemap_option)
+    point_size_map("confirmed", sidebar_basemap_option)
+    point_size_map("discharged", sidebar_basemap_option)
+    point_size_map("deaths", sidebar_basemap_option)
+
 
 
 def charts(sidebar_trend_option):
