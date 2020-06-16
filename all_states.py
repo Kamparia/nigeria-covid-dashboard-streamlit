@@ -60,20 +60,27 @@ def summary(sidebar_visual_option):
         fig.update_layout(legend_orientation='h', margin=dict(l=5, r=0, t=5, b=0))
         st.plotly_chart(fig)
 
-def table():
-    ## sub header
-    st.subheader("Cases by States:")
-    st.write("COVID-19 records according to states.")
 
+def table(sidebar_table_option):
     # display table data
-    st.table(states_csv[["STATE", "CONFIRMED", "DEATHS", "DISCHARGED", "ACTIVE"]])
+    if sidebar_table_option == "Daily Records":
+        ## daily records
+        st.subheader("Daily Records:")
+        st.write("Daily announced records of COVID-19 cases in Nigeria.")
+        dailyupdates_csv.rename(columns={'TOTAL CONFIRMED':'CONFIRMED', 'ACTIVE CASES':'ACTIVE', 'RECOVERED':'DISCHARGED', 'DAILY RECOVERED':'DAILY DISCHARGED'}, inplace=True)
+        st.table(dailyupdates_csv[["DATE", "CONFIRMED", "DEATHS", "DISCHARGED", "ACTIVE", "NEW CASES", "DAILY DEATHS", "DAILY DISCHARGED"]])
+    else:
+        ## cases by states
+        st.subheader("Cases by States:")
+        st.write("Breakdown of COVID-19 cases by states.")
+        st.table(states_csv[["STATE", "CONFIRMED", "DEATHS", "DISCHARGED", "ACTIVE"]])
+
 
 def map(sidebar_basemap_option):
     choropleth_map("confirmed", sidebar_basemap_option)
     point_size_map("confirmed", sidebar_basemap_option)
     point_size_map("discharged", sidebar_basemap_option)
     point_size_map("deaths", sidebar_basemap_option)
-
 
 
 def charts(sidebar_trend_option):

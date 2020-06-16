@@ -51,6 +51,11 @@ if sidebar_state_option == 'All States' and sidebar_visual_option == 'Maps':
         'Basemap Style:', ('Default', 'Dark', 'Light', 'Streets')
     )
 
+if sidebar_state_option == 'All States' and sidebar_visual_option == 'Tables':
+    sidebar_table_option = st.sidebar.selectbox(
+        'Data Type:', ('Cases by States', 'Daily Records')
+    )
+
 #####################################################################
 
 ## app title
@@ -63,7 +68,7 @@ if sidebar_state_option == 'All States':
     summary(sidebar_visual_option)
     
     if sidebar_visual_option == 'Tables':
-        table()
+        table(sidebar_table_option)
     elif sidebar_visual_option == 'Maps':
         map(sidebar_basemap_option)
     else: 

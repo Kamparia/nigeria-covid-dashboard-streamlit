@@ -17,6 +17,8 @@ states_geojson = data[5]
 
 mapbox_access_token = "pk.eyJ1Ijoia2FtcGFyaWEiLCJhIjoiY2s3OHMyaWlhMGk5azNsbnl3MnJweWdjYyJ9.4K1LcrByr-9dxInw2Iy7lw"
 
+
+## choropleth map function
 def choropleth_map(data_class, sidebar_basemap_option):
     data_class = data_class.upper()
 
@@ -38,10 +40,11 @@ def choropleth_map(data_class, sidebar_basemap_option):
         )
 
     fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, showlegend=False)
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0}, showlegend=False, coloraxis_showscale=False)
     st.plotly_chart(fig)
 
 
+## point map function
 def point_size_map(data_class, sidebar_basemap_option):
     ## data class color
     data_class = data_class.upper()
